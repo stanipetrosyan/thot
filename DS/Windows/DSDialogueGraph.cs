@@ -4,11 +4,11 @@ using UnityEngine.UIElements;
 
 namespace thot.DS.Windows;
 
-public class DialogueGraph: EditorWindow {
+public class DSDialogueGraph: EditorWindow {
 
     [MenuItem("Plugins/Dialogue Graph")]
     public static void OpenDialogueGraphWindow() {
-        var window = GetWindow<DialogueGraph>();
+        var window = GetWindow<DSDialogueGraph>();
         window.titleContent = new GUIContent("Dialogue Graph");
     }
     
@@ -17,10 +17,10 @@ public class DialogueGraph: EditorWindow {
     }
 
     private void AddGraphView() {
-        DialogueGraphView dialogueGraphView = new DialogueGraphView();
+        DSGraphView dsGraphView = new DSGraphView();
             
-        dialogueGraphView.StretchToParentSize();
-        rootVisualElement.Add(dialogueGraphView);
+        dsGraphView.StretchToParentSize();
+        rootVisualElement.Add(dsGraphView);
             
     }
 }
