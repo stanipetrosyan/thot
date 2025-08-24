@@ -1,5 +1,6 @@
 using thot.DS.Elements;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace thot.DS.Windows;
@@ -21,24 +22,46 @@ public class DSGraphView : GraphView {
 
         this.AddManipulator(CreateContextualMenu(
             title: "Add Single Choice Node",
-            action => AddElement(CreateNode("DialogueName", DSDialogueType.SINGLE
-            ))
+            action => CreateNode("DialogueName", DSDialogueType.Single, action.eventInfo.localMousePosition)
+        ));
+
+        this.AddManipulator(CreateContextualMenu(
+            title: "Add Multiple Choice Node",
+            action => CreateNode("DialogueName", DSDialogueType.Multiple, action.eventInfo.localMousePosition)
+        ));
+
+        this.AddManipulator(CreateContextualMenu(
+            title: "Add Group",
+            action => CreateGroup("DialogueName")
         ));
     }
 
     private IManipulator CreateContextualMenu(string title, Action<DropdownMenuAction> callback) {
-        throw new NotImplementedException();
+        ContextualMenuManipulator contextualMenuManipulator =
+            new ContextualMenuManipulator(@event => @event.menu.AppendAction(title, callback)
+            );
+
+        return contextualMenuManipulator;
     }
 
-    private DSNode CreateNode(string nodeName, DSDialogueType dialogueType) {
+    private void CreateNode(string nodeName, DSDialogueType dialogueType, Vector2 position) {
         DSNode node = dialogueType switch {
-            DSDialogueType.SINGLE => new DSSingleChoiceNode(),
-            DSDialogueType.MULTIPLE => new DSMultipleChoiceNode(),
+            DSDialogueType.Single => new DSSingleChoiceNode(),
+            DSDialogueType.Multiple => new DSMultipleChoiceNode(),
             _ => throw new ArgumentOutOfRangeException(nameof(dialogueType), dialogueType, null)
         };
-        
+
+        node.Initialize(nodeName, position);
+
         AddElement(node);
-        return node;
+    }
+
+    private void CreateGroup(string name) {
+        DSGroup group = new DSGroup {
+            title = name
+        };
+
+        AddElement(group);
     }
 
     private void AddGridBackground() {
