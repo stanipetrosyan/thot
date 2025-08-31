@@ -1,5 +1,5 @@
-namespace thot.DS.Windows;
-
-public enum DSDialogueType {
-    Single, Multiple
+namespace thot.DS.Windows {
+    public enum DSDialogueType {
+        Single, Multiple
+    }
 }
