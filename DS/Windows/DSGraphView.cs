@@ -1,5 +1,6 @@
 using thot.DS.Domain;
 using thot.DS.Elements;
+using thot.DS.Style;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -14,10 +15,12 @@ namespace thot.DS.Windows {
 
             AddGridBackground();
 
-            //AddStyles();
             AddManipulators();
             AddSearchWindow();
+
+            OnGraphViewChanged();
         }
+
 
         private void AddManipulators() {
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
@@ -61,6 +64,8 @@ namespace thot.DS.Windows {
                 SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), searchWindow);
         }
 
+        #region Graph View Elements Creation
+
         public DSNode CreateNode(string nodeName, DSDialogueType dialogueType, Vector2 position) {
             DSNode node = dialogueType switch {
                 DSDialogueType.Single => new DSSingleChoiceNode(),
@@ -74,13 +79,23 @@ namespace thot.DS.Windows {
             return node;
         }
 
-        private void CreateGroup(string name) {
+        private void CreateEdges(List<Edge> edgesToCreate) {
+            foreach (Edge edge in edgesToCreate) {
+                DSNode nextNode = (DSNode)edge.input.node;
+                DSChoice choiceData = (DSChoice)edge.output.userData;
+                choiceData.NodeID = nextNode.ID;
+            }
+        }
+
+        private void CreateGroup(string groupName) {
             DSGroup group = new DSGroup {
-                title = name
+                title = groupName
             };
 
             AddElement(group);
         }
+
+        #endregion
 
         public Vector2 GetLocalMousePosition(Vector2 mousePosition, bool isSearchWindow = false) {
             var worldMousePosition = mousePosition;
@@ -92,15 +107,49 @@ namespace thot.DS.Windows {
             return contentViewContainer.WorldToLocal(worldMousePosition);
         }
 
+
+        #region Graph View Events
+
+        private void OnGraphViewChanged() {
+            graphViewChanged = (changes) => {
+                if (changes.edgesToCreate != null) {
+                    CreateEdges(changes.edgesToCreate);
+                }
+
+                return changes;
+            };
+        }
+
+        #endregion
+        
+        #region Graph View Method Overrides
+
+        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter) {
+            List<Port> compatiblePorts = new List<Port>();
+
+            ports.ForEach(port => {
+                if (startPort == port || startPort.node == port.node || startPort.direction == port.direction) {
+                    return;
+                }
+
+                compatiblePorts.Add(port);
+            });
+
+            return compatiblePorts;
+        }
+
+        #endregion
+
+        #region Graph View Style
+
         private void AddGridBackground() {
             GridBackground gridBackground = new GridBackground();
             gridBackground.StretchToParentSize();
+            gridBackground.style.backgroundColor = Colors.FromRGBToColor(43, 43, 43);
 
             Insert(0, gridBackground);
         }
 
-        /*private void AddStyles() {
-            // TODO: Use embedded style
-        }*/
+        #endregion
     }
 }
