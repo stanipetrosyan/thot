@@ -1,4 +1,4 @@
-namespace thot.DS.Windows {
+namespace thot.DS.Domain {
     public enum DSDialogueType {
         Single, Multiple
     }

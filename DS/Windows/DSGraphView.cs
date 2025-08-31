@@ -1,3 +1,4 @@
+using thot.DS.Domain;
 using thot.DS.Elements;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -5,11 +6,17 @@ using UnityEngine.UIElements;
 
 namespace thot.DS.Windows {
     public class DSGraphView : GraphView {
-        public DSGraphView() {
+        private DSSearchWindow searchWindow;
+        private DSEditorWindow editorWindow;
+
+        public DSGraphView(DSEditorWindow dsEditorWindow) {
+            this.editorWindow = dsEditorWindow;
+
             AddGridBackground();
 
             //AddStyles();
             AddManipulators();
+            AddSearchWindow();
         }
 
         private void AddManipulators() {
@@ -35,6 +42,7 @@ namespace thot.DS.Windows {
             ));
         }
 
+
         private IManipulator CreateContextualMenu(string title, Action<DropdownMenuAction> callback) {
             ContextualMenuManipulator contextualMenuManipulator =
                 new ContextualMenuManipulator(@event => @event.menu.AppendAction(title, callback)
@@ -43,7 +51,17 @@ namespace thot.DS.Windows {
             return contextualMenuManipulator;
         }
 
-        private void CreateNode(string nodeName, DSDialogueType dialogueType, Vector2 position) {
+        private void AddSearchWindow() {
+            if (searchWindow == null) {
+                searchWindow = ScriptableObject.CreateInstance<DSSearchWindow>();
+                searchWindow.Initialize(this);
+            }
+
+            nodeCreationRequest = context =>
+                SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), searchWindow);
+        }
+
+        public DSNode CreateNode(string nodeName, DSDialogueType dialogueType, Vector2 position) {
             DSNode node = dialogueType switch {
                 DSDialogueType.Single => new DSSingleChoiceNode(),
                 DSDialogueType.Multiple => new DSMultipleChoiceNode(),
@@ -51,9 +69,9 @@ namespace thot.DS.Windows {
             };
 
             node.Initialize(nodeName, position);
-            //node.Draw();
 
             AddElement(node);
+            return node;
         }
 
         private void CreateGroup(string name) {
@@ -62,6 +80,16 @@ namespace thot.DS.Windows {
             };
 
             AddElement(group);
+        }
+
+        public Vector2 GetLocalMousePosition(Vector2 mousePosition, bool isSearchWindow = false) {
+            var worldMousePosition = mousePosition;
+
+            if (isSearchWindow) {
+                worldMousePosition -= editorWindow.position.position;
+            }
+
+            return contentViewContainer.WorldToLocal(worldMousePosition);
         }
 
         private void AddGridBackground() {
