@@ -12,18 +12,18 @@ public class DSTextField : TextField {
         }
         this.
         
-        style.backgroundColor = Colors.FromRGBToHex(29, 29, 30);
-        style.borderTopColor = Colors.FromRGBToHex(39, 41, 44);
-        style.borderBottomColor = Colors.FromRGBToHex(39, 41, 44);
-        style.borderLeftColor = Colors.FromRGBToHex(39, 41, 44);
-        style.borderRightColor = Colors.FromRGBToHex(39, 41, 44);
-        style.borderBottomLeftRadius = new StyleLength(new Length(4f));
-        style.borderBottomRightRadius = new StyleLength(new Length(4f));
-        style.borderTopRightRadius = new StyleLength(new Length(4f));
-        style.borderTopLeftRadius = new StyleLength(new Length(4f));
-        style.paddingBottom = new StyleLength(new Length(8f));
-        style.paddingTop = new StyleLength(new Length(8f));
-        style.paddingLeft = new StyleLength(new Length(8f));
-        style.paddingRight = new StyleLength(new Length(8f));
+        style.backgroundColor = Colors.FromRGBToColor(29, 29, 30);
+        style.borderTopColor = Colors.FromRGBToColor(39, 41, 44);
+        style.borderBottomColor = Colors.FromRGBToColor(39, 41, 44);
+        style.borderLeftColor = Colors.FromRGBToColor(39, 41, 44);
+        style.borderRightColor = Colors.FromRGBToColor(39, 41, 44);
+        style.borderBottomLeftRadius = Sizes.Pixels(4);
+        style.borderBottomRightRadius = Sizes.Pixels(4);
+        style.borderTopRightRadius = Sizes.Pixels(4);
+        style.borderTopLeftRadius = Sizes.Pixels(4);
+        style.paddingBottom = Sizes.Pixels(8);
+        style.paddingTop = Sizes.Pixels(8);
+        style.paddingLeft = Sizes.Pixels(8);
+        style.paddingRight = Sizes.Pixels(8);
     }
 }

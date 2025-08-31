@@ -3,7 +3,7 @@ using UnityEngine;
 namespace thot.DS.Style;
 
 public static class Colors {
-    public static Color FromRGBToHex(float red, float green, float blue, float alpha = 255) {
+    public static Color FromRGBToColor(float red, float green, float blue, float alpha = 255) {
         return new Color(red / 255f, green / 255f, blue / 255f, alpha / 255f);
     }
 }

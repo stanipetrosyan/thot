@@ -14,10 +14,11 @@ public class DSNode : Node {
     public DSDialogueType DialogueType { get; set; }
     public List<DSChoice> Choices { get; set; }
 
-    
-    
+
     private TextField dialogueNameField;
     private TextField dialogueTextField;
+    private VisualElement dialogueContainer;
+    private Foldout foldout;
 
 
     public virtual void Initialize(string nodeName, Vector2 position) {
@@ -39,9 +40,9 @@ public class DSNode : Node {
         Port input = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(bool));
         inputContainer.Add(input);
 
-        VisualElement dataContainer = new VisualElement();
+        dialogueContainer = new VisualElement();
 
-        Foldout foldout = new Foldout {
+        foldout = new Foldout {
             text = "Dialogue Text"
         };
 
@@ -50,13 +51,19 @@ public class DSNode : Node {
         };
 
         foldout.Add(dialogueText);
-        dataContainer.Add(foldout);
-        extensionContainer.Add(dataContainer);
+        dialogueContainer.Add(foldout);
+        extensionContainer.Add(dialogueContainer);
 
         RefreshExpandedState();
     }
 
     private void SetStyle() {
         mainContainer.style.backgroundColor = new Color(29f / 255f, 29f / 255f, 30f / 255f);
+
+        /*dialogueContainer.style.marginLeft = new StyleLength(new Length(-4f));
+        dialogueContainer.style.marginTop = new StyleLength(new Length(4f));*/
+        
+        foldout.style.marginLeft = new StyleLength(new Length(-4f));
+        foldout.style.marginTop = new StyleLength(new Length(4f));
     }
 }
