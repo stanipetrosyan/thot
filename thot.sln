@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "thot", "thot.csproj", "{9664AEEE-76FF-46B6-822C-D11D6E63304D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "thot", "thot.csproj", "{C9166020-5712-4C8D-A686-BC3FDDC523CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -8,9 +8,9 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9664AEEE-76FF-46B6-822C-D11D6E63304D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9664AEEE-76FF-46B6-822C-D11D6E63304D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9664AEEE-76FF-46B6-822C-D11D6E63304D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9664AEEE-76FF-46B6-822C-D11D6E63304D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9166020-5712-4C8D-A686-BC3FDDC523CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9166020-5712-4C8D-A686-BC3FDDC523CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9166020-5712-4C8D-A686-BC3FDDC523CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9166020-5712-4C8D-A686-BC3FDDC523CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -2,7 +2,7 @@ using UnityEngine.UIElements;
 
 namespace thot.DS.Style {
     public class DSTextField : TextField {
-        public DSTextField(string text, EventCallback<ChangeEvent<string>>? onChange = null) {
+        public DSTextField(string text, EventCallback<ChangeEvent<string>> onChange = null) {
             //this.text = text;
             this.value = text;
 

@@ -1,8 +1,9 @@
+using System;
 using UnityEngine.UIElements;
 
 namespace thot.DS.Style {
     public class DSButton : Button {
-        public DSButton(string text, Action? onClick = null) {
+        public DSButton(string text, Action onClick = null) {
             this.text = text;
             clickable = new Clickable(onClick);
 

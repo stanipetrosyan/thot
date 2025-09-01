@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using thot.DS.Domain;
 using thot.DS.Elements;
 using thot.DS.Style;
@@ -7,11 +9,13 @@ using UnityEngine.UIElements;
 
 namespace thot.DS.Windows {
     public class DSGraphView : GraphView {
-        private DSSearchWindow searchWindow;
-        private DSEditorWindow editorWindow;
+        private DSSearchWindow _searchWindow;
+        private readonly DSEditorWindow _editorWindow;
+        /*private UngroupedNodes ungroupedNode;*/
 
+        private Dictionary<string, DSNode> ungroupedNodes = new Dictionary<string, DSNode>();
         public DSGraphView(DSEditorWindow dsEditorWindow) {
-            this.editorWindow = dsEditorWindow;
+            this._editorWindow = dsEditorWindow;
 
             AddGridBackground();
 
@@ -47,7 +51,7 @@ namespace thot.DS.Windows {
 
 
         private IManipulator CreateContextualMenu(string title, Action<DropdownMenuAction> callback) {
-            ContextualMenuManipulator contextualMenuManipulator =
+            var contextualMenuManipulator =
                 new ContextualMenuManipulator(@event => @event.menu.AppendAction(title, callback)
                 );
 
@@ -55,23 +59,29 @@ namespace thot.DS.Windows {
         }
 
         private void AddSearchWindow() {
-            if (searchWindow == null) {
-                searchWindow = ScriptableObject.CreateInstance<DSSearchWindow>();
-                searchWindow.Initialize(this);
+            if (_searchWindow == null) {
+                _searchWindow = ScriptableObject.CreateInstance<DSSearchWindow>();
+                _searchWindow.Initialize(this);
             }
 
             nodeCreationRequest = context =>
-                SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), searchWindow);
+                SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), _searchWindow);
         }
 
         #region Graph View Elements Creation
 
         public DSNode CreateNode(string nodeName, DSDialogueType dialogueType, Vector2 position) {
-            DSNode node = dialogueType switch {
-                DSDialogueType.Single => new DSSingleChoiceNode(),
-                DSDialogueType.Multiple => new DSMultipleChoiceNode(),
-                _ => throw new ArgumentOutOfRangeException(nameof(dialogueType), dialogueType, null)
-            };
+            DSNode node;
+            switch (dialogueType) {
+                case DSDialogueType.Single:
+                    node = new DSSingleChoiceNode();
+                    break;
+                case DSDialogueType.Multiple:
+                    node = new DSMultipleChoiceNode();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(dialogueType), dialogueType, null);
+            }
 
             node.Initialize(nodeName, position);
 
@@ -101,7 +111,7 @@ namespace thot.DS.Windows {
             var worldMousePosition = mousePosition;
 
             if (isSearchWindow) {
-                worldMousePosition -= editorWindow.position.position;
+                worldMousePosition -= _editorWindow.position.position;
             }
 
             return contentViewContainer.WorldToLocal(worldMousePosition);
@@ -121,7 +131,7 @@ namespace thot.DS.Windows {
         }
 
         #endregion
-        
+
         #region Graph View Method Overrides
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter) {
