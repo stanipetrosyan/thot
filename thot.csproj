@@ -48,6 +48,7 @@
         <Compile Include="DS\Adapters\Assets.cs" />
         <Compile Include="DS\Adapters\FileSystemGraph.cs" />
         <Compile Include="DS\Domain\DSChoice.cs" />
+        <Compile Include="DS\Domain\DSDialogueSO.cs" />
         <Compile Include="DS\Domain\DSDialogueType.cs" />
         <Compile Include="DS\Domain\Save\DSChoiceSaveData.cs" />
         <Compile Include="DS\Domain\Save\DSGraphSaveDataSO.cs" />

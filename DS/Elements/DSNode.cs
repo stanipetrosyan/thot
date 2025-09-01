@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using thot.DS.Domain;
 using thot.DS.Style;
 using UnityEditor.Experimental.GraphView;
@@ -61,6 +62,11 @@ namespace thot.DS.Elements {
         
             foldout.style.marginLeft = new StyleLength(new Length(-4f));
             foldout.style.marginTop = new StyleLength(new Length(4f));
+        }
+        
+        public bool IsStartingNode() {
+            Port inputPort = (Port) inputContainer.Children().First();
+            return !inputPort.connected;
         }
     }
 }

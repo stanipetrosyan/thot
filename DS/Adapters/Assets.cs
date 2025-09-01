@@ -27,5 +27,13 @@ namespace thot.DS.Adapters {
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
         }
+
+        public static void CreateFolder(string path, string folderName) {
+            if (AssetDatabase.IsValidFolder(path + "/" + folderName)) {
+                return;
+            }
+
+            AssetDatabase.CreateFolder(path, folderName);
+        }
     }
 }
