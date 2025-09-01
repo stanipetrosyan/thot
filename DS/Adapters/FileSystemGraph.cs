@@ -1,4 +1,5 @@
 using System;
+using thot.DS.Domain.Save;
 using thot.DS.Windows;
 using UnityEditor;
 using UnityEngine;
@@ -12,9 +13,22 @@ namespace thot.DS.Adapters {
         }
         
         
-        public void Save(string path) {
-            Debug.Log(path);
+        public void Save(string filename) {
+            Debug.Log(filename);
             CreateStaticFolders();
+            
+            DSGraphSaveDataSO graphData =
+                Assets.CreateAsset<DSGraphSaveDataSO>("Assets/DialogueSystem/Dialogues/Graphs", $"{filename}Graph");
+            graphData.Initialize(filename);
+
+            var nodes = graphView.GetNodes();
+            graphData.AddNodes(nodes);
+            
+            Assets.SaveAsset(graphData);
+        }
+
+        private void SaveNodes() {
+            throw new NotImplementedException();
         }
 
         public void Clear() {

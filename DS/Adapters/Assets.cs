@@ -20,5 +20,12 @@ namespace thot.DS.Adapters {
         public static T LoadAsset<T>(string path, string assetName) where T : ScriptableObject {
             return AssetDatabase.LoadAssetAtPath<T>($"{path}/{assetName}.asset");
         }
+        
+        public static void SaveAsset(Object asset) {
+            EditorUtility.SetDirty(asset);
+
+            AssetDatabase.SaveAssets();
+            AssetDatabase.Refresh();
+        }
     }
 }

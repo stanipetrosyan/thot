@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using thot.DS.Domain;
 using thot.DS.Elements;
 using thot.DS.Style;
@@ -14,6 +15,7 @@ namespace thot.DS.Windows {
         /*private UngroupedNodes ungroupedNode;*/
 
         private Dictionary<string, DSNode> ungroupedNodes = new Dictionary<string, DSNode>();
+
         public DSGraphView(DSEditorWindow dsEditorWindow) {
             this._editorWindow = dsEditorWindow;
 
@@ -86,7 +88,18 @@ namespace thot.DS.Windows {
             node.Initialize(nodeName, position);
 
             AddElement(node);
+            AddUngroupedNode(node);
             return node;
+        }
+
+        private void AddUngroupedNode(DSNode node) {
+            string nodeName = node.DialogueName;
+            if (ungroupedNodes.ContainsKey(nodeName)) {
+                Debug.Log("TODO: duplicated node case");
+                return;
+            }
+
+            ungroupedNodes.Add(node.DialogueName, node);
         }
 
         private void CreateEdges(List<Edge> edgesToCreate) {
@@ -158,6 +171,14 @@ namespace thot.DS.Windows {
             gridBackground.style.backgroundColor = Colors.FromRGBToColor(43, 43, 43);
 
             Insert(0, gridBackground);
+        }
+
+        #endregion
+
+        #region Graph Utility Methods
+
+        public List<DSNode> GetNodes() {
+            return ungroupedNodes.Values.ToList();
         }
 
         #endregion

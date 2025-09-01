@@ -49,6 +49,9 @@
         <Compile Include="DS\Adapters\FileSystemGraph.cs" />
         <Compile Include="DS\Domain\DSChoice.cs" />
         <Compile Include="DS\Domain\DSDialogueType.cs" />
+        <Compile Include="DS\Domain\Save\DSChoiceSaveData.cs" />
+        <Compile Include="DS\Domain\Save\DSGraphSaveDataSO.cs" />
+        <Compile Include="DS\Domain\Save\DSNodeSaveData.cs" />
         <Compile Include="DS\Domain\UngroupedNodes.cs" />
         <Compile Include="DS\Elements\DSGroup.cs" />
         <Compile Include="DS\Elements\DSMultipleChoiceNode.cs" />
