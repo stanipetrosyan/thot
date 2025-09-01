@@ -45,6 +45,7 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
+        <Compile Include="DS\Adapters\Assets.cs" />
         <Compile Include="DS\Adapters\FileSystemGraph.cs" />
         <Compile Include="DS\Domain\DSChoice.cs" />
         <Compile Include="DS\Domain\DSDialogueType.cs" />

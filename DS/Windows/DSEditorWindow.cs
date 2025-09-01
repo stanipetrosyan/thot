@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Web;
 using thot.DS.Adapters;
 using thot.DS.Style;
 using UnityEditor;
@@ -11,9 +12,8 @@ namespace thot.DS.Windows {
     public class DSEditorWindow : EditorWindow {
         private const string DefaultDialogueFilename = "Dialogue Filename";
         private TextField filenameTextField;
-        private FileSystemGraph fsGraph = new FileSystemGraph();
-
-        //private DSGraphView graphView { get; set; }
+        private FileSystemGraph fsGraph;
+        private DSGraphView graphView { get; set; }
 
         [MenuItem("Tests/Dialogue Graph")]
         public static void OpenDialogueGraphWindow() {
@@ -32,10 +32,12 @@ namespace thot.DS.Windows {
             dsGraphView.StretchToParentSize();
             rootVisualElement.Add(dsGraphView);
 
-            //this.graphView = dsGraphView;
+            graphView = dsGraphView;
         }
 
         private void AddToolbar() {
+            fsGraph = new FileSystemGraph(graphView);
+
             Toolbar toolbar = new Toolbar();
 
             TextField filename = new DSTextField(DefaultDialogueFilename);
@@ -54,7 +56,8 @@ namespace thot.DS.Windows {
         }
 
         private void Load() {
-            var path = EditorUtility.OpenFilePanel("Dialogue Graphs", "Assets/DialogueSystem/Dialogues/Graphs", "asset");
+            var path = EditorUtility.OpenFilePanel("Dialogue Graphs", "Assets/DialogueSystem/Dialogues/Graphs",
+                "asset");
             if (string.IsNullOrEmpty(path)) {
                 EditorUtility.DisplayDialog("Error", "No filename selected", "OK");
                 return;
@@ -63,19 +66,18 @@ namespace thot.DS.Windows {
             fsGraph.Load(Path.GetFileNameWithoutExtension(path));
             //DSIOUtility.Load(graphView, Path.GetFileNameWithoutExtension(path));
         }
-    
+
         private void Clear() {
             throw new NotImplementedException();
         }
-    
+
         private void Save() {
             if (string.IsNullOrEmpty(filenameTextField.value)) {
                 EditorUtility.DisplayDialog("Error", "No filename selected", "OK");
             }
+
             fsGraph.Save(filenameTextField.value);
             //DSIOUtility.Save(graphView, filenameTextField.value);
         }
-    
-    
     }
 }
