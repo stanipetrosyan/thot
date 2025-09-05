@@ -5,9 +5,9 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace thot.DS.Elements {
-    public class DSMultipleChoiceNode : DSNode {
-        public override void Initialize(string nodeName, Vector2 position) {
-            base.Initialize(nodeName, position);
+    class DSMultipleChoiceNode : DSNode {
+        protected override void Initialize(Vector2 position) {
+            base.Initialize(position);
 
             DialogueType = DSDialogueType.Multiple;
 
@@ -18,7 +18,7 @@ namespace thot.DS.Elements {
             Choices.Add(choice);
         }
 
-        protected override void Draw() {
+        public override void Draw() {
             base.Draw();
 
             Button addChoiceButton = new DSButton("Add Choice", () => {

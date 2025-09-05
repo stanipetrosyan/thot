@@ -22,16 +22,33 @@ namespace thot.DS.Elements {
         private Foldout foldout;
 
 
-        public virtual void Initialize(string nodeName, Vector2 position) {
+        protected virtual void Initialize(Vector2 position) {
             ID = Guid.NewGuid().ToString();
-            DialogueName = nodeName;
+            DialogueName = "Dialogue Name";
             DialogueText = "Dialogue Text";
             Choices = new List<DSChoice>();
             SetPosition(new Rect(position, Vector2.zero));
         }
 
+        public static DSNode From(DSDialogueType dialogueType, Vector2 position) {
+            DSNode node;
+            switch (dialogueType) {
+                case DSDialogueType.Single:
+                    node = new DSSingleChoiceNode();
+                    break;
+                case DSDialogueType.Multiple:
+                    node = new DSMultipleChoiceNode();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(dialogueType), dialogueType, null);
+            }
+            node.Initialize(position);
+            
+            return node;
+        }
 
-        protected virtual void Draw() {
+
+        public virtual void Draw() {
             dialogueNameField = new DSTextField(DialogueName, (callback) => DialogueName = callback.newValue);
             titleContainer.Add(dialogueNameField);
             Port input = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(bool));

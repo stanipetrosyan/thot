@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using thot.DS.Domain;
+using thot.DS.Elements;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -40,25 +41,9 @@ namespace thot.DS.Windows {
 
         public bool OnSelectEntry(SearchTreeEntry searchTreeEntry, SearchWindowContext context) {
             var localMousePosition = graphView.GetLocalMousePosition(context.screenMousePosition, true);
-
-            switch (searchTreeEntry.userData) {
-                case DSDialogueType.Single: {
-                    graphView.CreateNode("DialogueName", DSDialogueType.Single, localMousePosition);
-
-                    return true;
-                }
-                case DSDialogueType.Multiple: {
-                    graphView.CreateNode("DialogueName", DSDialogueType.Multiple, localMousePosition);
-
-                    return true;
-                }
-                case Group _: {
-                    //graphView.CreateGroup("DialogueGroup", localMousePosition);
-                    return true;
-                }
-
-                default: return false;
-            }
+            
+            graphView.CreateElementNode(DSNode.From((DSDialogueType)searchTreeEntry.userData, localMousePosition));
+            return true;
         }
     }
 }

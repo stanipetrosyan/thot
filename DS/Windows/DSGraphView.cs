@@ -37,12 +37,12 @@ namespace thot.DS.Windows {
 
             this.AddManipulator(CreateContextualMenu(
                 title: "Add Single Choice Node",
-                action => CreateNode("DialogueName", DSDialogueType.Single, action.eventInfo.localMousePosition)
+                action => CreateElementNode(DSNode.From(DSDialogueType.Single, action.eventInfo.localMousePosition))
             ));
 
             this.AddManipulator(CreateContextualMenu(
                 title: "Add Multiple Choice Node",
-                action => CreateNode("DialogueName", DSDialogueType.Multiple, action.eventInfo.localMousePosition)
+                action => CreateElementNode(DSNode.From(DSDialogueType.Multiple, action.eventInfo.localMousePosition))
             ));
 
             this.AddManipulator(CreateContextualMenu(
@@ -72,24 +72,11 @@ namespace thot.DS.Windows {
 
         #region Graph View Elements Creation
 
-        public DSNode CreateNode(string nodeName, DSDialogueType dialogueType, Vector2 position) {
-            DSNode node;
-            switch (dialogueType) {
-                case DSDialogueType.Single:
-                    node = new DSSingleChoiceNode();
-                    break;
-                case DSDialogueType.Multiple:
-                    node = new DSMultipleChoiceNode();
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(dialogueType), dialogueType, null);
-            }
-
-            node.Initialize(nodeName, position);
-
+        public void CreateElementNode(DSNode node) {
+            node.Draw();
+            
             AddElement(node);
             AddUngroupedNode(node);
-            return node;
         }
 
         private void AddUngroupedNode(DSNode node) {

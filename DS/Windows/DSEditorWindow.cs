@@ -63,8 +63,13 @@ namespace thot.DS.Windows {
                 return;
             }
 
-            fsGraph.Load(Path.GetFileNameWithoutExtension(path));
-            //DSIOUtility.Load(graphView, Path.GetFileNameWithoutExtension(path));
+            var graphFilename = Path.GetFileNameWithoutExtension(path);
+            if (fsGraph.Load(graphFilename)) {
+                filenameTextField.value = graphFilename;
+            }
+            else {
+                EditorUtility.DisplayDialog("Error", "Failed to load graph file: " + graphFilename, "Ok");
+            }
         }
 
         private void Clear() {
@@ -77,7 +82,6 @@ namespace thot.DS.Windows {
             }
 
             fsGraph.Save(filenameTextField.value);
-            //DSIOUtility.Save(graphView, filenameTextField.value);
         }
     }
 }
