@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using thot.DS.Domain;
 using thot.DS.Domain.Save;
 using thot.DS.Elements;
@@ -11,6 +12,9 @@ namespace thot.DS.Adapters {
     public class FileSystemGraph {
         private DSGraphView graphView;
         private const string containerFolderPath = "Assets/DialogueSystem/Dialogues";
+
+
+        private static Dictionary<string, DSDialogueSO> createdDialogues = new Dictionary<string, DSDialogueSO>();
 
         public FileSystemGraph(DSGraphView dsGraphView) {
             this.graphView = dsGraphView;
@@ -35,9 +39,9 @@ namespace thot.DS.Adapters {
             Assets.CreateFolder("Assets", "DialogueSystem");
             Assets.CreateFolder("Assets/DialogueSystem", "Dialogues");
             Assets.CreateFolder("Assets/DialogueSystem/Dialogues", "Graphs");
-            // CreateFolder(containerFolderPath, "Global");
+            Assets.CreateFolder(containerFolderPath, "Global");
+            Assets.CreateFolder($"{containerFolderPath}/Global", "Dialogues");
             // CreateFolder(containerFolderPath, "Groups");
-            // CreateFolder($"{containerFolderPath}/Global", "Dialogues");
         }
 
         private void SaveNodes(DSGraphSaveDataSO graphData) {
@@ -48,7 +52,7 @@ namespace thot.DS.Adapters {
                 SaveNodeToScriptableObject(node);
             }
 
-            // UpdateDialogChoicesConnections();
+            UpdateDialogChoicesConnections(nodes);
         }
 
         private static void SaveNodeToScriptableObject(DSNode node) {
@@ -64,39 +68,43 @@ namespace thot.DS.Adapters {
 
                 dialogueContainer.UngroupedDialogues.Add(dialogue);
             }
-
-            dialogue.Initialize(
-                node.DialogueName,
-                node.Text,
-                ConvertNodeChoicesToDialogueChoices(node.Choices),
-                node.DialogueType,
-                node.IsStartingNode()
             );*/
             dialogue = Assets.CreateAsset<DSDialogueSO>($"{containerFolderPath}/Global/Dialogues", node.DialogueName);
             dialogue.Initialize(
                 node.DialogueName,
                 node.DialogueText,
-                ConvertNodeChoicesToDialogueChoices(node.Choices),
+                FromNodeChoices(node.Choices),
                 node.DialogueType,
                 node.IsStartingNode()
             );
-            //createdDialogues.Add(node.ID, dialogue);
+
+            createdDialogues.Add(node.ID, dialogue);
             Assets.SaveAsset(dialogue);
         }
 
-        private static List<DSDialogueSO.DSDialogueChoiceData> ConvertNodeChoicesToDialogueChoices(
-            List<DSChoice> nodeChoices) {
-            List<DSDialogueSO.DSDialogueChoiceData> dialogueChoices = new List<DSDialogueSO.DSDialogueChoiceData>();
+        private static List<DSDialogueSO.DSDialogueChoiceData> FromNodeChoices(List<DSChoice> nodeChoices) {
+            return nodeChoices.Select(node => new DSDialogueSO.DSDialogueChoiceData {
+                    Text = node.Text
+                }
+            ).ToList();
+        }
 
-            foreach (var nodeChoice in nodeChoices) {
-                DSDialogueSO.DSDialogueChoiceData choiceData = new DSDialogueSO.DSDialogueChoiceData() {
-                    Text = nodeChoice.Text
-                };
+        private static void UpdateDialogChoicesConnections(List<DSNode> nodes) {
+            foreach (DSNode node in nodes) {
+                DSDialogueSO dialogue = createdDialogues[node.ID];
 
-                dialogueChoices.Add(choiceData);
+                for (int choiceIndex = 0; choiceIndex < node.Choices.Count; ++choiceIndex) {
+                    var nodeChoice = node.Choices[choiceIndex];
+
+                    if (string.IsNullOrEmpty(nodeChoice.NodeID)) {
+                        continue;
+                    }
+
+                    dialogue.Choices[choiceIndex].NextDialogue = createdDialogues[nodeChoice.NodeID];
+                }
+
+                Assets.SaveAsset(dialogue);
             }
-
-            return dialogueChoices;
         }
 
         public void Clear() {

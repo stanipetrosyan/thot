@@ -93,13 +93,9 @@ namespace thot.DS.Windows {
         }
 
         private void AddUngroupedNode(DSNode node) {
-            string nodeName = node.DialogueName;
-            if (ungroupedNodes.ContainsKey(nodeName)) {
-                Debug.Log("TODO: duplicated node case");
-                return;
-            }
-
-            ungroupedNodes.Add(node.DialogueName, node);
+            //TODO: duplicated node NAME case
+            
+            ungroupedNodes.Add(node.ID, node);
         }
 
         private void CreateEdges(List<Edge> edgesToCreate) {
