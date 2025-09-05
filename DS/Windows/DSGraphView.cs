@@ -27,6 +27,10 @@ namespace thot.DS.Windows {
             OnGraphViewChanged();
         }
 
+        public void Clear() {
+            ungroupedNodes.Clear();
+        }
+
 
         private void AddManipulators() {
             SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);

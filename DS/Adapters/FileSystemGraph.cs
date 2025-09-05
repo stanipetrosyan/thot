@@ -22,11 +22,22 @@ namespace thot.DS.Adapters {
             this.graphView = dsGraphView;
         }
 
+        public void Initialize() {
+            CreateStaticFolders();
+        }
+
+        private void CreateStaticFolders() {
+            Assets.CreateFolder("Assets", "DialogueSystem");
+            Assets.CreateFolder("Assets/DialogueSystem", "Dialogues");
+            Assets.CreateFolder("Assets/DialogueSystem/Dialogues", "Graphs");
+            Assets.CreateFolder(containerFolderPath, "Global");
+            Assets.CreateFolder($"{containerFolderPath}/Global", "Dialogues");
+            // CreateFolder(containerFolderPath, "Groups");
+        }
+
+        #region Save Methods
 
         public void Save(string filename) {
-            Debug.Log(filename);
-            CreateStaticFolders();
-
             DSGraphSaveDataSO graphData =
                 Assets.CreateAsset<DSGraphSaveDataSO>("Assets/DialogueSystem/Dialogues/Graphs", $"{filename}Graph");
             graphData.Initialize(filename);
@@ -37,14 +48,6 @@ namespace thot.DS.Adapters {
             Assets.SaveAsset(graphData);
         }
 
-        private static void CreateStaticFolders() {
-            Assets.CreateFolder("Assets", "DialogueSystem");
-            Assets.CreateFolder("Assets/DialogueSystem", "Dialogues");
-            Assets.CreateFolder("Assets/DialogueSystem/Dialogues", "Graphs");
-            Assets.CreateFolder(containerFolderPath, "Global");
-            Assets.CreateFolder($"{containerFolderPath}/Global", "Dialogues");
-            // CreateFolder(containerFolderPath, "Groups");
-        }
 
         private void SaveNodes(DSGraphSaveDataSO graphData) {
             var nodes = graphView.GetNodes();
@@ -109,9 +112,16 @@ namespace thot.DS.Adapters {
             }
         }
 
+        #endregion
+
+        #region Clear Methods
         public void Clear() {
             throw new NotImplementedException();
         }
+        
+        #endregion
+
+        #region Load Methods
 
         public bool Load(string graphFilename) {
             var graphData =
@@ -135,7 +145,7 @@ namespace thot.DS.Adapters {
                 node.DialogueName = nodeData.Name;
                 node.DialogueText = nodeData.Text;
                 node.Choices = dsChoices;
-                
+
                 graphView.CreateElementNode(node);
 
                 loadedNodes.Add(node.ID, node);
@@ -159,7 +169,7 @@ namespace thot.DS.Adapters {
                 }
             ).ToList();
         }
-        
+
         private void LoadNodesConnections() {
             foreach (KeyValuePair<string, DSNode> loadedNode in loadedNodes) {
                 foreach (var visualElement in loadedNode.Value.outputContainer.Children()) {
@@ -181,5 +191,7 @@ namespace thot.DS.Adapters {
                 }
             }
         }
+
+        #endregion
     }
 }

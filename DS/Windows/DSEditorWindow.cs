@@ -26,6 +26,10 @@ namespace thot.DS.Windows {
             AddToolbar();
         }
 
+        void OnDestroy() {
+            graphView.Clear();
+        }
+
         private void AddGraphView() {
             DSGraphView dsGraphView = new DSGraphView(this);
 
@@ -37,6 +41,7 @@ namespace thot.DS.Windows {
 
         private void AddToolbar() {
             fsGraph = new FileSystemGraph(graphView);
+            fsGraph.Initialize();
 
             Toolbar toolbar = new Toolbar();
 
