@@ -51,16 +51,17 @@ namespace thot.DS.Elements {
         public virtual void Draw() {
             dialogueNameField = new DSTextField(DialogueName, (callback) => DialogueName = callback.newValue);
             titleContainer.Add(dialogueNameField);
+            
             Port input = InstantiatePort(Orientation.Horizontal, Direction.Input, Port.Capacity.Single, typeof(bool));
             inputContainer.Add(input);
 
             dialogueContainer = new VisualElement();
 
             foldout = new Foldout {
-                text = "Dialogue Text"
+                text = "Dialogue Area"
             };
 
-            TextField dialogueText = new DSTextField("Dialogue Text", (callback) => DialogueText = callback.newValue) {
+            TextField dialogueText = new DSTextField(DialogueText, (callback) => DialogueText = callback.newValue) {
                 multiline = true
             };
             foldout.Add(dialogueText);

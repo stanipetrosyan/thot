@@ -3,13 +3,17 @@ using UnityEngine.UIElements;
 namespace thot.DS.Style {
     public class DSTextField : TextField {
         public DSTextField(string text, EventCallback<ChangeEvent<string>> onChange = null) {
-            //this.text = text;
+            this.text = text;
             this.value = text;
 
             if (onChange != null) {
                 this.RegisterValueChangedCallback(onChange);
             }
 
+            ApplyStyle();
+        }
+
+        private void ApplyStyle() {
             style.backgroundColor = Colors.FromRGBToColor(29, 29, 30);
             style.borderTopColor = Colors.FromRGBToColor(39, 41, 44);
             style.borderBottomColor = Colors.FromRGBToColor(39, 41, 44);
