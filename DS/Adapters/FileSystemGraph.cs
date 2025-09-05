@@ -121,7 +121,7 @@ namespace thot.DS.Adapters {
             }
 
             LoadNodes(graphData.Nodes);
-            //LoadNodesConnections();
+            LoadNodesConnections();
 
             return true;
         }
@@ -164,7 +164,7 @@ namespace thot.DS.Adapters {
             foreach (KeyValuePair<string, DSNode> loadedNode in loadedNodes) {
                 foreach (var visualElement in loadedNode.Value.outputContainer.Children()) {
                     var choicePort = (Port)visualElement;
-                    DSChoiceSaveData choiceData = (DSChoiceSaveData)choicePort.userData;
+                    DSChoice choiceData = (DSChoice)choicePort.userData;
 
                     if (string.IsNullOrEmpty(choiceData.NodeID)) {
                         return;
