@@ -5,7 +5,6 @@ using thot.DS.Domain;
 using thot.DS.Domain.Save;
 using thot.DS.Elements;
 using thot.DS.Windows;
-using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -13,13 +12,15 @@ namespace thot.DS.Adapters {
     public class FileSystemGraph {
         private DSGraphView graphView;
         private const string containerFolderPath = "Assets/DialogueSystem/Dialogues";
-
-
-        private static Dictionary<string, DSDialogueSO> createdDialogues = new Dictionary<string, DSDialogueSO>();
-        private static Dictionary<string, DSNode> loadedNodes = new Dictionary<string, DSNode>();
+        
+        private Dictionary<string, DSDialogueSO> createdDialogues;
+        private Dictionary<string, DSNode> loadedNodes;
 
         public FileSystemGraph(DSGraphView dsGraphView) {
             this.graphView = dsGraphView;
+            
+            createdDialogues = new Dictionary<string, DSDialogueSO>();
+            loadedNodes = new Dictionary<string, DSNode>();
         }
 
         public void Initialize() {
@@ -39,12 +40,11 @@ namespace thot.DS.Adapters {
 
         public void Save(string filename) {
             DSGraphSaveDataSO graphData =
-                Assets.CreateAsset<DSGraphSaveDataSO>("Assets/DialogueSystem/Dialogues/Graphs", $"{filename}Graph");
+                Assets.UpsertAsset<DSGraphSaveDataSO>("Assets/DialogueSystem/Dialogues/Graphs", $"{filename}");
             graphData.Initialize(filename);
 
             SaveNodes(graphData);
-
-
+            
             Assets.SaveAsset(graphData);
         }
 
@@ -52,6 +52,7 @@ namespace thot.DS.Adapters {
         private void SaveNodes(DSGraphSaveDataSO graphData) {
             var nodes = graphView.GetNodes();
             graphData.AddNodes(nodes);
+            Assets.SaveAsset(graphData);
 
             foreach (var node in nodes) {
                 SaveNodeToScriptableObject(node);
@@ -60,21 +61,10 @@ namespace thot.DS.Adapters {
             UpdateDialogChoicesConnections(nodes);
         }
 
-        private static void SaveNodeToScriptableObject(DSNode node) {
+        private void SaveNodeToScriptableObject(DSNode node) {
             DSDialogueSO dialogue;
-
-            /*if (node.Group != null) {
-                dialogue = CreateAsset<DSDialogueSO>($"{containerFolderPath}/Groups/{node.Group.title}/Dialogues",
-                    node.DialogueName);
-                dialogueContainer.DialogueGroups.AddItem(createdDialogueGroups[node.Group.ID], dialogue);
-            }
-            else {
-                dialogue = CreateAsset<DSDialogueSO>($"{containerFolderPath}/Global/Dialogues", node.DialogueName);
-
-                dialogueContainer.UngroupedDialogues.Add(dialogue);
-            }
-            );*/
-            dialogue = Assets.CreateAsset<DSDialogueSO>($"{containerFolderPath}/Global/Dialogues", node.DialogueName);
+            dialogue = Assets.UpsertAsset<DSDialogueSO>($"{containerFolderPath}/Global/Dialogues", node.DialogueName);
+            
             dialogue.Initialize(
                 node.DialogueName,
                 node.DialogueText,
@@ -83,7 +73,8 @@ namespace thot.DS.Adapters {
                 node.IsStartingNode()
             );
 
-            createdDialogues.Add(node.ID, dialogue);
+            createdDialogues[node.ID] = dialogue;
+
             Assets.SaveAsset(dialogue);
         }
 
@@ -94,7 +85,7 @@ namespace thot.DS.Adapters {
             ).ToList();
         }
 
-        private static void UpdateDialogChoicesConnections(List<DSNode> nodes) {
+        private void UpdateDialogChoicesConnections(List<DSNode> nodes) {
             foreach (DSNode node in nodes) {
                 DSDialogueSO dialogue = createdDialogues[node.ID];
 
@@ -115,10 +106,11 @@ namespace thot.DS.Adapters {
         #endregion
 
         #region Clear Methods
+
         public void Clear() {
             throw new NotImplementedException();
         }
-        
+
         #endregion
 
         #region Load Methods
@@ -161,7 +153,7 @@ namespace thot.DS.Adapters {
             });
         }
 
-        private static List<DSChoice> FromNodeChoices(List<DSChoiceSaveData> nodeChoices) {
+        private List<DSChoice> FromNodeChoices(List<DSChoiceSaveData> nodeChoices) {
             return nodeChoices.Select(choice =>
                 new DSChoice {
                     Text = choice.Text,

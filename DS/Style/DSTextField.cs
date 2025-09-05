@@ -23,10 +23,10 @@ namespace thot.DS.Style {
             style.borderBottomRightRadius = Sizes.Pixels(4);
             style.borderTopRightRadius = Sizes.Pixels(4);
             style.borderTopLeftRadius = Sizes.Pixels(4);
-            style.paddingBottom = Sizes.Pixels(8);
+            /*style.paddingBottom = Sizes.Pixels(8);
             style.paddingTop = Sizes.Pixels(8);
             style.paddingLeft = Sizes.Pixels(8);
-            style.paddingRight = Sizes.Pixels(8);
+            style.paddingRight = Sizes.Pixels(8);*/
         }
     }
 }

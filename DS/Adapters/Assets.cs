@@ -17,6 +17,21 @@ namespace thot.DS.Adapters {
             return asset;
         }
 
+        public static T UpsertAsset<T>(string path, string assetName) where T : ScriptableObject {
+            var asset = LoadAsset<T>(path, assetName);
+            var fullPath = $"{path}/{assetName}.asset";
+            
+            if (asset) {
+                AssetDatabase.DeleteAsset(fullPath);
+            }
+            
+            var assetUpdated = ScriptableObject.CreateInstance<T>();
+            AssetDatabase.CreateAsset(assetUpdated, fullPath);
+            Debug.Log(assetUpdated);
+
+            return assetUpdated;
+        }
+
         public static T LoadAsset<T>(string path, string assetName) where T : ScriptableObject {
             return AssetDatabase.LoadAssetAtPath<T>($"{path}/{assetName}.asset");
         }
