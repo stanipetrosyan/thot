@@ -25,6 +25,7 @@ namespace thot.DS.Windows {
             AddSearchWindow();
 
             OnGraphViewChanged();
+            OnElementDeleted();
         }
 
         public void Clear() {
@@ -74,19 +75,23 @@ namespace thot.DS.Windows {
                 SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), _searchWindow);
         }
 
-        #region Graph View Elements Creation
+        #region Graph View Elements
 
         public void CreateElementNode(DSNode node) {
             node.Draw();
-            
+
             AddElement(node);
             AddUngroupedNode(node);
         }
 
         private void AddUngroupedNode(DSNode node) {
             //TODO: duplicated node NAME case
-            
             ungroupedNodes.Add(node.ID, node);
+        }
+
+        private void RemoveUngroupedNode(DSNode node) {
+            ungroupedNodes.Remove(node.ID);
+            RemoveElement(node);
         }
 
         private void CreateEdges(List<Edge> edgesToCreate) {
@@ -127,6 +132,26 @@ namespace thot.DS.Windows {
                 }
 
                 return changes;
+            };
+        }
+
+        private void OnElementDeleted() {
+            deleteSelection = (operationName, askUser) => {
+                var nodeToDelete = new List<DSNode>();
+
+                foreach (var element in selection) {
+                    switch (element) {
+                        case DSNode node:
+                            nodeToDelete.Add(node);
+                            break;
+                    }
+                }
+
+                foreach (var node in nodeToDelete) {
+                    RemoveUngroupedNode(node);
+
+                    RemoveElement(node);
+                }
             };
         }
 
