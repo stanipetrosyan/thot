@@ -48,6 +48,8 @@
         <Compile Include="DS\Adapters\Assets.cs" />
         <Compile Include="DS\Adapters\FileSystemGraph.cs" />
         <Compile Include="DS\Domain\DSChoice.cs" />
+        <Compile Include="DS\Domain\DSDialogueContainerSO.cs" />
+        <Compile Include="DS\Domain\DSDialogueGroupSO.cs" />
         <Compile Include="DS\Domain\DSDialogueSO.cs" />
         <Compile Include="DS\Domain\DSDialogueType.cs" />
         <Compile Include="DS\Domain\Save\DSChoiceSaveData.cs" />
@@ -57,6 +59,8 @@
         <Compile Include="DS\Elements\DSMultipleChoiceNode.cs" />
         <Compile Include="DS\Elements\DSNode.cs" />
         <Compile Include="DS\Elements\DSSingleChoiceNode.cs" />
+        <Compile Include="DS\Inspectors\DSInspector.cs" />
+        <Compile Include="DS\Scripts\DSDialogue.cs" />
         <Compile Include="DS\Style\Colors.cs" />
         <Compile Include="DS\Style\DSButton.cs" />
         <Compile Include="DS\Style\DSTextField.cs" />

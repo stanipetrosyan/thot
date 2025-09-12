@@ -12,13 +12,13 @@ namespace thot.DS.Adapters {
     public class FileSystemGraph {
         private DSGraphView graphView;
         private const string containerFolderPath = "Assets/DialogueSystem/Dialogues";
-        
+
         private Dictionary<string, DSDialogueSO> createdDialogues;
         private Dictionary<string, DSNode> loadedNodes;
 
         public FileSystemGraph(DSGraphView dsGraphView) {
             this.graphView = dsGraphView;
-            
+
             createdDialogues = new Dictionary<string, DSDialogueSO>();
             loadedNodes = new Dictionary<string, DSNode>();
         }
@@ -43,28 +43,33 @@ namespace thot.DS.Adapters {
                 Assets.UpsertAsset<DSGraphSaveDataSO>("Assets/DialogueSystem/Dialogues/Graphs", $"{filename}");
             graphData.Initialize(filename);
 
-            SaveNodes(graphData);
-            
+            DSDialogueContainerSO dialogueContainer =
+                Assets.CreateAsset<DSDialogueContainerSO>(containerFolderPath, filename);
+            dialogueContainer.Initialize(filename);
+
+            SaveNodes(graphData, dialogueContainer);
+
             Assets.SaveAsset(graphData);
         }
 
 
-        private void SaveNodes(DSGraphSaveDataSO graphData) {
+        private void SaveNodes(DSGraphSaveDataSO graphData, DSDialogueContainerSO dialogueContainer) {
             var nodes = graphView.GetNodes();
             graphData.AddNodes(nodes);
             Assets.SaveAsset(graphData);
 
             foreach (var node in nodes) {
-                SaveNodeToScriptableObject(node);
+                SaveNodeToScriptableObject(node, dialogueContainer);
             }
 
             UpdateDialogChoicesConnections(nodes);
         }
 
-        private void SaveNodeToScriptableObject(DSNode node) {
-            DSDialogueSO dialogue;
-            dialogue = Assets.UpsertAsset<DSDialogueSO>($"{containerFolderPath}/Global/Dialogues", node.DialogueName);
-            
+        private void SaveNodeToScriptableObject(DSNode node, DSDialogueContainerSO dialogueContainer) {
+            var dialogue =
+                Assets.UpsertAsset<DSDialogueSO>($"{containerFolderPath}/Global/Dialogues", node.DialogueName);
+            dialogueContainer.AddDialogue(dialogue);
+
             dialogue.Initialize(
                 node.DialogueName,
                 node.DialogueText,

@@ -12,7 +12,6 @@ namespace thot.DS.Windows {
     public class DSGraphView : GraphView {
         private DSSearchWindow _searchWindow;
         private readonly DSEditorWindow _editorWindow;
-        /*private UngroupedNodes ungroupedNode;*/
 
         private Dictionary<string, DSNode> ungroupedNodes = new Dictionary<string, DSNode>();
 
@@ -84,11 +83,12 @@ namespace thot.DS.Windows {
             AddUngroupedNode(node);
         }
 
+        //TODO: duplicated node NAME case
         private void AddUngroupedNode(DSNode node) {
-            //TODO: duplicated node NAME case
             ungroupedNodes.Add(node.ID, node);
         }
 
+        // TODO: remove all edge and open ports
         private void RemoveUngroupedNode(DSNode node) {
             ungroupedNodes.Remove(node.ID);
             RemoveElement(node);
@@ -138,19 +138,26 @@ namespace thot.DS.Windows {
         private void OnElementDeleted() {
             deleteSelection = (operationName, askUser) => {
                 var nodeToDelete = new List<DSNode>();
+                var edgeToDelete = new List<Edge>();
 
                 foreach (var element in selection) {
                     switch (element) {
                         case DSNode node:
                             nodeToDelete.Add(node);
                             break;
+                        case Edge edge:
+                            edgeToDelete.Add(edge);
+                            break;
                     }
                 }
 
                 foreach (var node in nodeToDelete) {
                     RemoveUngroupedNode(node);
-
                     RemoveElement(node);
+                }
+
+                foreach (var edge in edgeToDelete) {
+                    RemoveElement(edge);
                 }
             };
         }
